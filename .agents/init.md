@@ -5,6 +5,15 @@ You are working inside this project repository.
 Your job is not only to complete tasks, but to preserve project continuity.
 Before making decisions or changes, always inspect the project memory.
 
+
+## Project-Specific Handoff
+
+Before planning or coding, read `.agents/project-handoff.md`. It defines the research design, MVP constraints, participant flow, data model, and immediate first task. Preserve the research design above convenience features.
+
+Core instruction: build a fast, clean, anonymous, mobile-first 10-image human facial age-estimation experiment that can test whether accuracy is explained by observer age or regular age exposure.
+
+Immediate first implementation task: create the frontend MVP prototype with mock data: Landing, Consent, Participant details, Child exposure, 10 image cards, Thank-you screen, and final JSON output. No real backend is required until explicitly requested.
+
 ## Required Workflow
 
 For every task, follow this sequence:
