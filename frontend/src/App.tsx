@@ -1,9 +1,10 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import { EXPERIMENT_VERSION as MANIFEST_VERSION, FACE_IMAGES } from "./faceManifest";
+import * as api from "./api";
 
-const EXPERIMENT_VERSION = "mvp_003";
+const EXPERIMENT_VERSION = MANIFEST_VERSION as string;
 const TRIAL_COUNT = 10;
 const LATEST_RESULT_STORAGE_KEY = "face_age_guessing_latest_result";
-const MOCK_FACE_CREATED_AT = "2026-07-09T00:00:00.000Z";
 
 const GENDER_VALUES = ["female", "male", "other", "prefer_not_to_say"] as const;
 const CHILD_AGE_BINS = ["0-2", "3-5", "6-8", "9-12", "13-17", "18+"] as const;
@@ -13,7 +14,7 @@ type Screen = "landing" | "consent" | "details" | "childExposure" | "trial" | "t
 type ParticipantGender = (typeof GENDER_VALUES)[number];
 type ChildAgeBin = (typeof CHILD_AGE_BINS)[number];
 type ChildExposureChoice = "no" | "yes" | "prefer_not_to_say";
-type FaceGender = "female" | "male" | "other" | "unknown";
+type FaceGender = string;
 type SessionStatus = "created" | "active" | "completed" | "abandoned" | "invalid";
 type DetailsError = "age" | "gender" | "";
 type ChildExposureError = "choice" | "bins" | "";
@@ -324,56 +325,24 @@ const TEXT: Record<Language, TextBundle> = {
   },
 };
 
-function makeMockFaceSvg(seed: number, skin: string, hair: string, shirt: string): string {
-  const eyebrowOffset = seed % 2 === 0 ? 0 : 4;
-  const smile = seed % 3 === 0 ? "M122 162 Q150 178 178 162" : "M124 164 Q150 170 176 164";
-  const svg = `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 360" role="img">
-      <defs>
-        <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0" stop-color="#eef2ff" />
-          <stop offset="1" stop-color="#f8fafc" />
-        </linearGradient>
-      </defs>
-      <rect width="300" height="360" rx="32" fill="url(#bg)" />
-      <circle cx="150" cy="138" r="82" fill="${hair}" />
-      <circle cx="150" cy="154" r="72" fill="${skin}" />
-      <path d="M82 138 Q150 48 218 138 Q190 86 150 82 Q110 86 82 138Z" fill="${hair}" />
-      <circle cx="125" cy="148" r="7" fill="#111827" />
-      <circle cx="175" cy="148" r="7" fill="#111827" />
-      <path d="M112 ${132 + eyebrowOffset} Q125 ${126 + eyebrowOffset} 138 ${132 + eyebrowOffset}" fill="none" stroke="#111827" stroke-width="5" stroke-linecap="round" />
-      <path d="M162 ${132 - eyebrowOffset} Q175 ${126 - eyebrowOffset} 188 ${132 - eyebrowOffset}" fill="none" stroke="#111827" stroke-width="5" stroke-linecap="round" />
-      <path d="M150 153 Q144 172 158 172" fill="none" stroke="#9f6b53" stroke-width="5" stroke-linecap="round" />
-      <path d="${smile}" fill="none" stroke="#991b1b" stroke-width="5" stroke-linecap="round" />
-      <path d="M70 344 Q86 238 150 238 Q214 238 230 344Z" fill="${shirt}" />
-    </svg>`;
+const MVP_BINS = [
+  "4-6", "7-9", "10-12", "13-17", "18-24", "25-31",
+  "32-38", "39-45", "46-52", "53-60",
+] as const;
 
-  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+const ACTIVE_IMAGES = FACE_IMAGES.filter(function (img) { return img.is_active; });
+
+function sampleOnePerBin(): FaceImage[] {
+  const selected: FaceImage[] = [];
+  for (const bin of MVP_BINS) {
+    const candidates = ACTIVE_IMAGES.filter(function (img) { return img.true_age_bin === bin; });
+    if (candidates.length > 0) {
+      const pick = candidates[Math.floor(Math.random() * candidates.length)];
+      selected.push(pick);
+    }
+  }
+  return selected;
 }
-
-const MOCK_FACE_IMAGES: FaceImage[] = [
-  ["face_mock_01", 5, "4-6", "unknown", "#f4c7a1", "#7c2d12", "#6366f1"],
-  ["face_mock_02", 8, "7-9", "unknown", "#e9b98f", "#3f2a1d", "#0ea5e9"],
-  ["face_mock_03", 11, "10-12", "unknown", "#c98f68", "#111827", "#10b981"],
-  ["face_mock_04", 15, "13-17", "unknown", "#f1c39f", "#92400e", "#f59e0b"],
-  ["face_mock_05", 22, "18-24", "unknown", "#d8a47f", "#1f2937", "#ef4444"],
-  ["face_mock_06", 29, "25-31", "unknown", "#8d5b3f", "#111827", "#8b5cf6"],
-  ["face_mock_07", 35, "32-38", "unknown", "#f0b98d", "#4b5563", "#14b8a6"],
-  ["face_mock_08", 42, "39-45", "unknown", "#b77955", "#374151", "#f97316"],
-  ["face_mock_09", 49, "46-52", "unknown", "#e0aa7c", "#6b7280", "#2563eb"],
-  ["face_mock_10", 58, "53-60", "unknown", "#c9926b", "#9ca3af", "#64748b"],
-].map(([face_id, true_age, true_age_bin, face_gender, skin, hair, shirt], index) => ({
-  face_id: String(face_id),
-  image_url: makeMockFaceSvg(index + 1, String(skin), String(hair), String(shirt)),
-  true_age: Number(true_age),
-  true_age_bin: String(true_age_bin),
-  face_gender: face_gender as FaceGender,
-  source_dataset: "internal_mock_svg_placeholders",
-  license_type: "internal_mock_only_not_research_data",
-  is_active: true,
-  quality_score: 1,
-  created_at: MOCK_FACE_CREATED_AT,
-}));
 
 function createId(prefix: string): string {
   return `${prefix}_${crypto.randomUUID()}`;
@@ -446,6 +415,105 @@ function createDashboardPreview(result: ExperimentOutput) {
   };
 }
 
+function AnalyticsDisplay({ data }: { data: Record<string, unknown> }) {
+  const op = data.operational as Record<string, unknown> | undefined;
+  const res = data.research as Record<string, unknown> | undefined;
+  const qual = data.quality as Record<string, unknown> | undefined;
+
+  const maeGroup = (res?.mae_by_participant_age_group as Array<Record<string, unknown>>) ?? [];
+  const maeBin = (res?.mae_by_face_age_bin as Array<Record<string, unknown>>) ?? [];
+  const heat = (res?.heatmap as Array<Record<string, unknown>>) ?? [];
+
+  return (
+    <div className="analytics-grid">
+      {op && (
+        <div className="analytics-card">
+          <h3 className="analytics-h3">Sessions</h3>
+          <dl className="analytics-dl">
+            <div><dt>Total</dt><dd>{String(op.total_sessions)}</dd></div>
+            <div><dt>Completed</dt><dd>{String(op.completed_sessions)}</dd></div>
+            <div><dt>Abandoned</dt><dd>{String(op.abandoned_sessions)}</dd></div>
+            <div><dt>Rate</dt><dd>{String(op.completion_rate_pct)}%</dd></div>
+            <div><dt>Avg duration</dt><dd>{String(op.avg_session_duration_sec)}s</dd></div>
+          </dl>
+        </div>
+      )}
+
+      {qual && (
+        <div className="analytics-card">
+          <h3 className="analytics-h3">Data Quality</h3>
+          <dl className="analytics-dl">
+            <div><dt>Too fast (&lt;300ms)</dt><dd>{String(qual.too_fast_responses)}</dd></div>
+            <div><dt>Too slow (&gt;60s)</dt><dd>{String(qual.too_slow_responses)}</dd></div>
+            <div><dt>All same guess</dt><dd>{String(qual.low_effort_all_same_guess)}</dd></div>
+            <div><dt>Under 10s session</dt><dd>{String(qual.sessions_under_10_seconds)}</dd></div>
+            <div><dt>Avg response time</dt><dd>{String(qual.response_time_ms_avg)}ms</dd></div>
+          </dl>
+        </div>
+      )}
+
+      {res && (
+        <div className="analytics-card">
+          <h3 className="analytics-h3">Research</h3>
+          <dl className="analytics-dl">
+            <div><dt>Overall bias</dt><dd>{String((res.overall_bias as Record<string,unknown>)?.mean_signed_error ?? "—")}</dd></div>
+            <div><dt>Compression slope</dt><dd>{String((res.compression as Record<string,unknown>)?.slope ?? "—")}</dd></div>
+          </dl>
+        </div>
+      )}
+
+      {maeGroup.length > 0 && (
+        <div className="analytics-card analytics-card-wide">
+          <h3 className="analytics-h3">MAE by Participant Age Group</h3>
+          <div className="mini-table">
+            <div className="mini-row mini-head"><span>Group</span><span>MAE</span><span>N</span></div>
+            {maeGroup.map(function (r) { return (
+              <div className="mini-row" key={String(r.participant_age_group)}>
+                <span>{String(r.participant_age_group)}</span>
+                <span dir="ltr">{String(r.mae)}</span>
+                <span dir="ltr">{String(r.n)}</span>
+              </div>
+            ); })}
+          </div>
+        </div>
+      )}
+
+      {maeBin.length > 0 && (
+        <div className="analytics-card analytics-card-wide">
+          <h3 className="analytics-h3">MAE by Face Age Bin</h3>
+          <div className="mini-table">
+            <div className="mini-row mini-head"><span>Bin</span><span>MAE</span><span>N</span></div>
+            {maeBin.map(function (r) { return (
+              <div className="mini-row" key={String(r.true_age_bin)}>
+                <span dir="ltr">{String(r.true_age_bin)}</span>
+                <span dir="ltr">{String(r.mae)}</span>
+                <span dir="ltr">{String(r.n)}</span>
+              </div>
+            ); })}
+          </div>
+        </div>
+      )}
+
+      {heat.length > 0 && (
+        <div className="analytics-card analytics-card-full">
+          <h3 className="analytics-h3">MAE Heatmap (Participant Group × Face Bin)</h3>
+          <div className="mini-table heatmap-table">
+            <div className="mini-row mini-head"><span>Group</span><span>Bin</span><span>MAE</span><span>N</span></div>
+            {heat.map(function (r, i) { return (
+              <div className="mini-row" key={i}>
+                <span>{String(r.participant_age_group)}</span>
+                <span dir="ltr">{String(r.true_age_bin)}</span>
+                <span dir="ltr">{String(r.mae)}</span>
+                <span dir="ltr">{String(r.n)}</span>
+              </div>
+            ); })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function App() {
   const [language, setLanguage] = useState<Language>("en");
   const [screen, setScreen] = useState<Screen>("landing");
@@ -461,6 +529,14 @@ export default function App() {
   const [guess, setGuess] = useState("");
   const [trialStartedAt, setTrialStartedAt] = useState<number | null>(null);
   const [guessError, setGuessError] = useState<GuessError>("");
+  const [apiConnected, setApiConnected] = useState(false);
+  const [analyticsData, setAnalyticsData] = useState<Record<string, unknown> | null>(null);
+
+  useEffect(function () {
+    fetch("http://127.0.0.1:8000/api/session", { method: "OPTIONS" })
+      .then(function () { return setApiConnected(true); })
+      .catch(function () { return null; });
+  }, []);
 
   const text = TEXT[language];
   const direction = getDirection(language);
@@ -543,7 +619,7 @@ export default function App() {
   ) {
     const sessionId = createId("session");
     const assignedAt = new Date().toISOString();
-    const assignedFaces = shuffle(MOCK_FACE_IMAGES).slice(0, TRIAL_COUNT);
+    const assignedFaces = shuffle(sampleOnePerBin()).slice(0, TRIAL_COUNT);
     const trialAssignments = assignedFaces.map((face, index) => ({
       trial_id: createId("trial"),
       session_id: sessionId,
@@ -570,7 +646,7 @@ export default function App() {
         session_id: sessionId,
         child_age_bin,
       })),
-      face_images: MOCK_FACE_IMAGES,
+      face_images: assignedFaces,
       trial_assignments: trialAssignments,
       responses: [],
     };
@@ -580,6 +656,9 @@ export default function App() {
     setGuess("");
     setGuessError("");
     setTrialStartedAt(Date.now());
+
+    api.createSession(age, gender, EXPERIMENT_VERSION, hasChildExposure, childAgeBins);
+
     setScreen("trial");
   }
 
@@ -685,10 +764,20 @@ export default function App() {
 
     setOutput(nextOutput);
 
+    api.submitResponse(
+      nextResponse.session_id,
+      nextResponse.trial_id,
+      nextResponse.face_id,
+      nextResponse.predicted_age,
+      nextResponse.response_time_ms,
+      nextResponse.client_order_index,
+    );
+
     if (isFinalTrial) {
       saveLatestResult(nextOutput);
       setLatestResult(nextOutput);
       console.log(text.consoleLabel, nextOutput);
+      api.completeSession(nextOutput.participant_sessions.session_id);
       setScreen("thanks");
       return;
     }
@@ -718,6 +807,7 @@ export default function App() {
     window.location.hash = "dashboard";
     setLatestResult(readLatestResult());
     setScreen("dashboard");
+    api.fetchAnalytics().then(function (data) { return setAnalyticsData(data); });
   }
 
   return (
@@ -986,6 +1076,7 @@ export default function App() {
             <p className="lede">{text.thankYouCopy}</p>
             <p>{text.continuePrompt}</p>
           </div>
+          {apiConnected && <p className="api-pill">🔗 Backend connected</p>}
           <div className="completion-actions">
             <button className="primary-button" type="button" onClick={handleDoTenMore}>
               {text.doTenMore}
@@ -1064,6 +1155,15 @@ export default function App() {
                 {dashboardJson}
               </pre>
             </>
+          )}
+
+          {analyticsData && (
+            <div className="analytics-section">
+              <div className="output-header">
+                <span>Research Analytics</span>
+              </div>
+              <AnalyticsDisplay data={analyticsData} />
+            </div>
           )}
 
           <button

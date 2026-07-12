@@ -68,3 +68,90 @@
 * Keep UI language out of the research payload for now; the bilingual toggle remains UI-only and should not become a participant data field unless there is a later explicit analysis reason.
 * Keep visible dashboard previews free of correct ages to avoid biasing repeat sessions.
 * Do not proceed to backend/database implementation until admin approves the Phase 4 validation document.
+
+## 2026-07-09 — Phase 5A UX/Mobile Polish
+
+* Keep Phase 5A limited to visual/mobile QA polish; do not add backend, analytics, new questions, or new participant data fields.
+* Do not bump the experiment version for the Phase 5A CSS/mobile changes because they do not alter the research flow, trial count, sampler, stored data fields, or age-input semantics from `mvp_003`.
+* Preserve the no-anchor slider start state during polish: `?` readout, hidden slider thumb, and disabled Continue until active slider interaction.
+
+## 2026-07-09 — Phase 5B Image Sourcing Rules
+
+* Do not use random scraped faces from the internet.
+* Do not use AI-generated faces for the research image pool because the study is about human perception of real facial age.
+* Do not download, commit, or integrate real face images until source licensing, web-display rights, child-image permissions, and admin approval are complete.
+* Use a manifest-first workflow for real images, with required metadata matching the planned `face_images` model plus license/provenance fields.
+* Do not expose true age or age bin in public image filenames or URLs.
+* Replacing the mock image set with real images is a meaningful experiment-version change and should move beyond `mvp_003`, likely to `mvp_004` once approved.
+
+## 2026-07-09 — Preliminary Source Review Outcome
+
+* Prefer consented/source-controlled image collection as the primary route, especially for images of minors.
+* Treat controlled academic datasets as possible supplemental sources only if terms explicitly allow the intended web experiment display.
+* Reject scraped/public-provenance-unclear age-face datasets for deployment unless provenance and rights are proven.
+* Reject celebrity-heavy datasets for the MVP because recognizability, noisy age labels, and licensing concerns can bias or weaken the experiment.
+* Reject age-bin-only datasets as primary sources because the main metric requires exact `true_age`.
+
+## 2026-07-09 — Free Dataset Search Outcome
+
+* No free/no-cost dataset is approved for use yet.
+* FG-NET, APPA-REAL/ChaLearn-style datasets, controlled adult face datasets, and AFAD-style datasets are only terms-review candidates.
+* UTKFace-style datasets remain rejected for public MVP deployment unless provenance, consent, child-image rights, and web-display rights are explicitly proven.
+* Celebrity datasets such as IMDB-WIKI/CACD/AgeDB remain rejected for MVP deployment.
+* Continue to treat consented/source-controlled collection as the lowest-risk path, especially for child bins.
+
+## 2026-07-12 — Dataset Fetch Agent Clarification
+
+* Previous dataset-fetch failures were caused by an over-broad interpretation of the no-real-images rule.
+* Fetching public dataset source pages, license pages, and metadata descriptions for terms review is allowed and should proceed when requested.
+* Downloading dataset archives/images requires explicit local-only admin approval and must stay under ignored paths such as `data/raw/<source>/`.
+* Integrating real images into the app remains blocked until licensing, public web-display rights, child-image permissions, manifest mapping, experiment-version bump, and admin approval are complete.
+* Future agents must read `docs/data-fetch-agent-runbook.md` before acting on dataset fetch requests.
+
+## 2026-07-12 — Dataset Fetch Guardrails
+
+* Store downloaded/fetched dataset materials only under gitignored `data/` paths.
+* FG-NET may be inspected locally, but it is not approved for public deployment because the mirror page states the mirror provider does not own the dataset and rights remain unresolved.
+* Do not bypass official download/access forms for Chicago Face Database or FACES; those must be completed manually with real admin/institutional information if pursued.
+* Metadata/norming files may be inspected, but image integration remains blocked until source terms and web-display rights are approved.
+
+## 2026-07-12 — Candidate Manifest Guardrails
+
+* Candidate manifests generated from local datasets must mark all real-image rows `is_active: false` until rights, web-display permission, and admin approval are complete.
+* FACES public/API metadata can be used for source evaluation, but the 72 public preview items are not enough for the MVP image pool and do not cover child/teen bins.
+* FG-NET has enough child/teen coverage for local inspection, but remains blocked for public deployment due to unresolved rights/provenance.
+
+## 2026-07-12 — Phase 6 Real Image Integration
+
+* Replace mock SVG placeholders with extracted real images from FG-NET and Chicago Face Database.
+* Store extracted/renamed images under gitignored `frontend/public/faces/`.
+* Generate a versioned TypeScript manifest `frontend/src/faceManifest.ts` from the norming data.
+* Use the manifest's `mvp_004` experiment version in the frontend.
+* The frontend sampler now picks exactly one active image per MVP age bin (10 total), randomly, from the available pool.
+* Face image metadata may be committed; raw image files stay under ignored paths.
+* Real images are for local/dev use only until rights and display terms are approved.
+
+## 2026-07-12 — Phase 7A Backend + Database
+
+* Use SQLite as the database (zero-config, file-based, reproducible, easy to inspect).
+* Use FastAPI for the backend (type-safe, auto-documented, Python-native).
+* Keep the frontend fully functional without the backend (localStorage fallback) so development and testing never depend on a running server.
+* Auto-seed the face_images table from the frontend manifest at startup rather than duplicating metadata.
+* The backend sampler uses SQL `ORDER BY RANDOM()` to pick one active image per MVP bin per session.
+* Database file at `data/experiment.db` stays gitignored; schema is defined in code only.
+
+## 2026-07-12 — UX Polish (Soft / Warm Redesign)
+
+* Move from cold blue-gray to warm purple-lavender design.
+* Replace red validation errors with soft amber nudges.
+* No experiment version bump — cosmetic changes only.
+
+## 2026-07-12 — Phase 8 Analytics + Data Quality
+
+* Compute all research metrics from the SQLite database, not from frontend JavaScript.
+* Expose analytics via API so it can be inspected without running the frontend.
+* Flag suspicious data (too fast, too slow, low effort, all-same-guess) but do not delete it.
+* Analytics dashboard is embedded in the local result dashboard, only shown when backend is running.
+
+
+

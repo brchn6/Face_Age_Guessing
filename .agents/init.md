@@ -12,6 +12,8 @@ Before planning or coding, read `.agents/project-handoff.md`. It defines the res
 
 Core instruction: build a fast, clean, anonymous, mobile-first 10-image human facial age-estimation experiment that can test whether accuracy is explained by observer age or regular age exposure.
 
+Data-fetch instruction: when the admin asks to fetch data or datasets, read `docs/data-fetch-agent-runbook.md` first. Do not confuse source/terms review with app integration: fetching public source pages and terms for review is allowed; downloading dataset files requires explicit local-only admin approval; integrating real images remains blocked until the full source/manifest approval checklist is complete.
+
 Immediate first implementation task: create the frontend MVP prototype with mock data: Landing, Consent, Participant details, Child exposure, 10 image cards, Thank-you screen, and final JSON output. No real backend is required until explicitly requested.
 
 ## Required Workflow
