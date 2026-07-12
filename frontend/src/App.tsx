@@ -29,6 +29,8 @@ type TextBundle = {
   landingTitle: string;
   landingCopy: string;
   landingTime: string;
+  aboutTitle: string;
+  aboutText: string;
   countdown: {
     landing: string;
     consent: string;
@@ -162,6 +164,8 @@ const TEXT: Record<Language, TextBundle> = {
     landingTitle: "Guess Their Age",
     landingCopy: "You’ll see 10 face images. For each one, guess how old the person is.",
     landingTime: "It takes less than a minute.",
+    aboutTitle: "Why this exists",
+    aboutText: "I'm a data scientist who loves weird questions. I wanted to understand how people estimate others' ages — whether we're better at guessing ages close to our own, or ages we're regularly exposed to. This experiment is how I'm collecting data to find out.",
     countdown: {
       landing: "Game starts after 2 quick steps.",
       consent: "2 quick steps before the game.",
@@ -247,6 +251,8 @@ const TEXT: Record<Language, TextBundle> = {
     landingTitle: "נחשו את הגיל",
     landingCopy: "יוצגו לכם 10 תמונות פנים. בכל תמונה, נחשו בן/בת כמה האדם.",
     landingTime: "זה לוקח פחות מדקה.",
+    aboutTitle: "למה זה קיים",
+    aboutText: "אני מדען נתונים שאוהב שאלות מוזרות. רציתי להבין איך אנשים מעריכים גיל של אנשים אחרים — האם אנחנו טובים יותר בניחוש גילאים שקרובים לשלנו, או בניחוש גילאים שאנחנו חשופים אליהם באופן קבוע. הניסוי הזה הוא הדרך שלי לאסוף נתונים כדי לגלות.",
     countdown: {
       landing: "המשחק מתחיל אחרי 2 שלבים קצרים.",
       consent: "עוד 2 שלבים קצרים לפני המשחק.",
@@ -819,6 +825,10 @@ export default function App() {
           <h1 id="landing-title">{text.landingTitle}</h1>
           <p className="lede">{text.landingCopy}</p>
           <p className="time-note">{text.landingTime}</p>
+          <details className="about-details">
+            <summary className="about-summary">{text.aboutTitle}</summary>
+            <p className="about-text">{text.aboutText}</p>
+          </details>
           <p className="countdown-pill">{text.countdown.landing}</p>
           <button className="primary-button" type="button" onClick={() => setScreen("consent")}>
             {text.start}
