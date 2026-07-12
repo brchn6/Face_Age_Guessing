@@ -515,7 +515,7 @@ function AnalyticsDisplay({ data }: { data: Record<string, unknown> }) {
 }
 
 export default function App() {
-  const [language, setLanguage] = useState<Language>("en");
+  const [language, setLanguage] = useState<Language>("he");
   const [screen, setScreen] = useState<Screen>("landing");
   const [participantAge, setParticipantAge] = useState("");
   const [participantGender, setParticipantGender] = useState<ParticipantGender | "">("");
