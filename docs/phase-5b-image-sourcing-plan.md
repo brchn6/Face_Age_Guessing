@@ -1,4 +1,4 @@
-# Phase 5B — Real Image Sourcing Plan
+# Phase 5B - Real Image Sourcing Plan
 
 Date: 2026-07-09  
 Current prototype version: `mvp_003`
@@ -121,7 +121,7 @@ If child-image licensing is not clear, do not use the image.
 
 ## Source Strategy Options
 
-### Option A — Purpose-built consented image collection
+### Option A - Purpose-built consented image collection
 
 Best research/ethics option if feasible.
 
@@ -138,7 +138,7 @@ Cons:
 - requires consent process
 - harder to collect children ethically
 
-### Option B — Controlled academic datasets / data-use agreements
+### Option B - Controlled academic datasets / data-use agreements
 
 Good option if terms allow web experiment display.
 
@@ -153,7 +153,7 @@ Cons:
 - terms may prohibit redistribution or public web display
 - child coverage may be limited
 
-### Option C — Open/public datasets with clear licenses
+### Option C - Open/public datasets with clear licenses
 
 Only acceptable if licensing and web-display rights are explicit.
 

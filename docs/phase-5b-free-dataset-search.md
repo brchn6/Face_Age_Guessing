@@ -1,4 +1,4 @@
-# Phase 5B — Free Dataset Search
+# Phase 5B - Free Dataset Search
 
 Date: 2026-07-09  
 Current prototype version: `mvp_003`

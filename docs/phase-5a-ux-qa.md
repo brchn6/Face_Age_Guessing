@@ -1,4 +1,4 @@
-# Phase 5A — UX QA / Mobile Polish
+# Phase 5A - UX QA / Mobile Polish
 
 Date: 2026-07-09  
 Prototype version: `mvp_003`

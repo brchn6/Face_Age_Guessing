@@ -80,7 +80,7 @@ def make_overlay(draw_fn):
     return PdfReader(buf).pages[0]
 
 
-# ── Page 3 (0-index: 2) — Signature block ──────────────────────────────────
+# ── Page 3 (0-index: 2) - Signature block ──────────────────────────────────
 # Coordinates from PDF text extraction (underscore line positions):
 #   NAME:                 x=288 y=563
 #   SIGNATURE:            x=288 y=495  (leave blank)
@@ -97,7 +97,7 @@ def draw_page3(c):
     c.drawString(288, 141, DATE)
 
 
-# ── Page 4 (0-index: 3) — Required information form ────────────────────────
+# ── Page 4 (0-index: 3) - Required information form ────────────────────────
 # Underscore line positions (x, y) for each field:
 #   Name:              107, 669
 #   Organization:      138, 645
@@ -118,7 +118,7 @@ def draw_page3(c):
 #   Description L1:     71, 225
 #   ... L2..L5:         71, 201/177/153/129
 
-# Page 5 (0-index: 4) — Description continuation:
+# Page 5 (0-index: 4) - Description continuation:
 #   Lines at y=696, 672, 648, 624, 600, 576, 552, 528, 504, 480, 456, 432,
 #             408, 384, 360, 336, 312  (17 lines, x=71 each)
 
@@ -144,14 +144,14 @@ def draw_page4(c):
         if text:
             c.drawString(x, y, text)
 
-    # Study name — may wrap across up to 3 lines
+    # Study name - may wrap across up to 3 lines
     study_lines = wrap_text_to_width(STUDY_NAME, DESC_WIDTH, c)
     study_y = [333, 309, 285]
     for i, line in enumerate(study_lines):
         if i < len(study_y):
             c.drawString(71, study_y[i], line)
 
-    # Study description — wraps across page 4 and page 5
+    # Study description - wraps across page 4 and page 5
     desc_lines = wrap_text_to_width(STUDY_DESC, DESC_WIDTH, c)
     desc_y_p4 = [225, 201, 177, 153, 129]
     for i, line in enumerate(desc_lines):
@@ -175,7 +175,7 @@ def draw_page5(c):
 
 
 def draw_page6(c):
-    """Page 6: Participant disclaimer — mark "I agree"."""
+    """Page 6: Participant disclaimer - mark "I agree"."""
     c.setFont("Helvetica", 10)
     # "I agree" is at x=76 y=502
     c.drawString(90, 504, "X")

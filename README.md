@@ -62,9 +62,9 @@ uv run python -m src.server
 
 The API is available at `http://127.0.0.1:8000`. Endpoints:
 
-- `POST /api/session` — create session and assign trials
-- `POST /api/response` — submit a single response
-- `POST /api/session/complete` — mark session as completed
+- `POST /api/session` - create session and assign trials
+- `POST /api/response` - submit a single response
+- `POST /api/session/complete` - mark session as completed
 
 The frontend calls these automatically when the backend is running. If the backend is unavailable, the frontend still works fully with `localStorage` as a fallback.
 

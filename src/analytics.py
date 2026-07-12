@@ -230,7 +230,7 @@ def _compression_interpretation(slope_row: Optional[Any]) -> str:
         return "Moderate age differentiation"
     if slope > 0.5:
         return "Moderate age compression"
-    return "Strong age compression — participants flatten age distinctions"
+    return "Strong age compression - participants flatten age distinctions"
 
 
 def _rows_to_list(rows: list) -> list[dict]:

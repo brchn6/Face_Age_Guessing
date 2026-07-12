@@ -1,4 +1,4 @@
-# Phase 4 — Data Shape Validation
+# Phase 4 - Data Shape Validation
 
 Date: 2026-07-09  
 Prototype version: `mvp_003`

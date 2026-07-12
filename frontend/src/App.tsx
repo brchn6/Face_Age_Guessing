@@ -165,13 +165,13 @@ const TEXT: Record<Language, TextBundle> = {
     landingCopy: "You’ll see 10 face images. For each one, guess how old the person is.",
     landingTime: "It takes less than a minute.",
     aboutTitle: "Why this exists",
-    aboutText: "I'm a data scientist who loves weird questions. I wanted to understand how people estimate others' ages — whether we're better at guessing ages close to our own, or ages we're regularly exposed to. This experiment is how I'm collecting data to find out.",
+    aboutText: "I'm a data scientist who loves weird questions. I wanted to understand how people estimate others' ages - whether we're better at guessing ages close to our own, or ages we're regularly exposed to. This experiment is how I'm collecting data to find out.",
     countdown: {
       landing: "Game starts after 2 quick steps.",
       consent: "2 quick steps before the game.",
       detailsDefault: "1 quick step before the game.",
       detailsAdult: "After this, just 1 short question before the game.",
-      childExposure: "Last question — the game starts next.",
+      childExposure: "Last question - the game starts next.",
     },
     start: "Start",
     consentEyebrow: "Before you start",
@@ -252,13 +252,13 @@ const TEXT: Record<Language, TextBundle> = {
     landingCopy: "יוצגו לכם 10 תמונות פנים. בכל תמונה, נחשו בן/בת כמה האדם.",
     landingTime: "זה לוקח פחות מדקה.",
     aboutTitle: "למה זה קיים",
-    aboutText: "אני מדען נתונים שאוהב שאלות מוזרות. רציתי להבין איך אנשים מעריכים גיל של אנשים אחרים — האם אנחנו טובים יותר בניחוש גילאים שקרובים לשלנו, או בניחוש גילאים שאנחנו חשופים אליהם באופן קבוע. הניסוי הזה הוא הדרך שלי לאסוף נתונים כדי לגלות.",
+    aboutText: "אני מדען נתונים שאוהב שאלות מוזרות. רציתי להבין איך אנשים מעריכים גיל של אנשים אחרים - האם אנחנו טובים יותר בניחוש גילאים שקרובים לשלנו, או בניחוש גילאים שאנחנו חשופים אליהם באופן קבוע. הניסוי הזה הוא הדרך שלי לאסוף נתונים כדי לגלות.",
     countdown: {
       landing: "המשחק מתחיל אחרי 2 שלבים קצרים.",
       consent: "עוד 2 שלבים קצרים לפני המשחק.",
       detailsDefault: "עוד שלב קצר אחד לפני המשחק.",
       detailsAdult: "אחרי זה רק עוד שאלה קצרה אחת לפני המשחק.",
-      childExposure: "שאלה אחרונה — המשחק מתחיל מיד אחריה.",
+      childExposure: "שאלה אחרונה - המשחק מתחיל מיד אחריה.",
     },
     start: "התחלה",
     consentEyebrow: "לפני שמתחילים",
@@ -462,8 +462,8 @@ function AnalyticsDisplay({ data }: { data: Record<string, unknown> }) {
         <div className="analytics-card">
           <h3 className="analytics-h3">Research</h3>
           <dl className="analytics-dl">
-            <div><dt>Overall bias</dt><dd>{String((res.overall_bias as Record<string,unknown>)?.mean_signed_error ?? "—")}</dd></div>
-            <div><dt>Compression slope</dt><dd>{String((res.compression as Record<string,unknown>)?.slope ?? "—")}</dd></div>
+            <div><dt>Overall bias</dt><dd>{String((res.overall_bias as Record<string,unknown>)?.mean_signed_error ?? "-")}</dd></div>
+            <div><dt>Compression slope</dt><dd>{String((res.compression as Record<string,unknown>)?.slope ?? "-")}</dd></div>
           </dl>
         </div>
       )}
@@ -1127,7 +1127,7 @@ export default function App() {
                 </div>
                 <div>
                   <dt>{text.completedAtLabel}</dt>
-                  <dd dir="ltr">{dashboardResult.participant_sessions.completed_at ?? "—"}</dd>
+                  <dd dir="ltr">{dashboardResult.participant_sessions.completed_at ?? "-"}</dd>
                 </div>
                 <div>
                   <dt>{text.averageResponseTimeLabel}</dt>

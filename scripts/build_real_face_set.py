@@ -2,8 +2,8 @@
 """Phase 6: Extract, rename, and manifest real images from FG-NET + CFD.
 
 Output:
-  frontend/public/faces/  — renamed neutral-ID images (gitignored)
-  frontend/src/faceManifest.ts — TypeScript manifest for the app
+  frontend/public/faces/  - renamed neutral-ID images (gitignored)
+  frontend/src/faceManifest.ts - TypeScript manifest for the app
 """
 
 from __future__ import annotations

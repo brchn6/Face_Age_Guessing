@@ -1,4 +1,4 @@
-# Phase 5C — Preliminary Image Source Review
+# Phase 5C - Preliminary Image Source Review
 
 Date: 2026-07-09  
 Current prototype version: `mvp_003`
@@ -40,7 +40,7 @@ Recommended path:
 | Age-bin-only datasets such as Adience/FairFace | Poor for exact-age error | Poor for `true_age` | Variable | Poor | Reject for primary experiment |
 | AI-generated faces | Not real age perception | Invalid | N/A | N/A | Reject |
 
-## Path A — Purpose-Built Consented Collection
+## Path A - Purpose-Built Consented Collection
 
 ### Summary
 
@@ -79,7 +79,7 @@ Use this as the preferred long-term route, especially for the child bins:
 - parent/guardian consent for minors
 - confirmation of age at photo
 
-## Path B — Controlled Academic Dataset / Data-Use Agreement
+## Path B - Controlled Academic Dataset / Data-Use Agreement
 
 ### Summary
 
@@ -155,7 +155,7 @@ Current decision:
 
 - Useful only as supplementary adult-bin source if true age and display rights are clear.
 
-## Path C — Clearly Licensed Public Datasets
+## Path C - Clearly Licensed Public Datasets
 
 ### Summary
 
@@ -263,8 +263,8 @@ Do not use scraped placeholder faces.
 
 Use a hybrid plan:
 
-1. Build or acquire a consented/source-controlled child image set for ages 4–17.
-2. Review controlled academic/adult datasets for ages 18–60 if terms allow online display.
+1. Build or acquire a consented/source-controlled child image set for ages 4-17.
+2. Review controlled academic/adult datasets for ages 18-60 if terms allow online display.
 3. If no adult dataset has acceptable rights, extend consented collection to adults as well.
 4. Use the manifest template before integration.
 5. Keep all raw images out of git.

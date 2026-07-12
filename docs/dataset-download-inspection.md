@@ -31,27 +31,27 @@ Archive inspection:
 - 1002 image files
 - all parsed as `.jpg`
 - ages parse from filenames using pattern like `001A02.JPG`
-- parsed age range: 0–69
+- parsed age range: 0-69
 
 MVP bin counts from filename-parsed ages:
 
 | Bin | Count |
 |---|---:|
-| 4–6 | 123 |
-| 7–9 | 97 |
-| 10–12 | 110 |
-| 13–17 | 159 |
-| 18–24 | 154 |
-| 25–31 | 85 |
-| 32–38 | 48 |
-| 39–45 | 41 |
-| 46–52 | 19 |
-| 53–60 | 8 |
+| 4-6 | 123 |
+| 7-9 | 97 |
+| 10-12 | 110 |
+| 13-17 | 159 |
+| 18-24 | 154 |
+| 25-31 | 85 |
+| 32-38 | 48 |
+| 39-45 | 41 |
+| 46-52 | 19 |
+| 53-60 | 8 |
 
 Assessment:
 
 - Strong age coverage for child/teen bins.
-- Weak coverage for older adult bins, especially 53–60.
+- Weak coverage for older adult bins, especially 53-60.
 - Repeated identities likely exist, because FG-NET is age-progression data.
 - Not approved for public deployment until rights and web-display permissions are clarified.
 
@@ -71,7 +71,7 @@ Not fetched:
 Reason:
 
 - The full CFD image archive requires completing the official download form.
-- The page states the full archive is about 1.5–1.7 GB.
+- The page states the full archive is about 1.5-1.7 GB.
 - It requires name, email, university affiliation, materials, research purpose, and agreement to terms.
 - We should not bypass or fake that form.
 
@@ -118,16 +118,16 @@ FACES public/API preview MVP bin counts:
 
 | Bin | Count |
 |---|---:|
-| 4–6 | 0 |
-| 7–9 | 0 |
-| 10–12 | 0 |
-| 13–17 | 0 |
-| 18–24 | 12 |
-| 25–31 | 12 |
-| 32–38 | 0 |
-| 39–45 | 12 |
-| 46–52 | 12 |
-| 53–60 | 0 |
+| 4-6 | 0 |
+| 7-9 | 0 |
+| 10-12 | 0 |
+| 13-17 | 0 |
+| 18-24 | 12 |
+| 25-31 | 12 |
+| 32-38 | 0 |
+| 39-45 | 12 |
+| 46-52 | 12 |
+| 53-60 | 0 |
 | 61+ outside MVP | 24 |
 
 Assessment:

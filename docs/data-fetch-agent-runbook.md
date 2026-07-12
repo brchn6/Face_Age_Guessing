@@ -20,7 +20,7 @@ That is too restrictive. Source-page review, license review, metadata inspection
 
 ## Meaning of “fetch” in this project
 
-### 1. Fetch source pages / terms for review — allowed
+### 1. Fetch source pages / terms for review - allowed
 
 When asked to review or fetch information about a candidate dataset, the agent should proceed without looping, if network access is available.
 
@@ -34,7 +34,7 @@ Allowed actions:
 
 This does **not** approve the images for app use.
 
-### 2. Download dataset files locally — allowed only with explicit admin approval
+### 2. Download dataset files locally - allowed only with explicit admin approval
 
 The agent may download candidate dataset files only when the admin explicitly names the source and approves local acquisition for review.
 
@@ -53,7 +53,7 @@ A safe approval phrase is:
 Approve local-only download of <SOURCE> to data/raw/<source>/ for license/metadata review. Do not integrate into the app.
 ```
 
-### 3. Integrate real images into the app — blocked until full approval
+### 3. Integrate real images into the app - blocked until full approval
 
 The agent must not integrate real face images into the frontend or backend until all approval checklist items are complete:
 
