@@ -67,6 +67,18 @@ button {
     0 4px 24px rgb(148 163 184 / 12%),
     0 24px 80px rgb(148 163 184 / 10%);
   padding: clamp(24px, 7vw, 34px);
+  animation: cardIn 400ms ease-out;
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .hero-card {
@@ -554,45 +566,18 @@ p {
   opacity: 0;
 }
 
-.slider-labels,
-.stepper-row {
+.slider-labels {
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-
-.slider-labels {
   color: #64748b;
   font-size: 0.82rem;
   font-weight: 850;
   margin-top: -12px;
 }
 
-.stepper-row {
-  gap: 12px;
-}
-
 .stepper-button {
-  flex: 1;
-  min-height: 54px;
-  border-radius: 20px;
-  background: #faf5ff;
-  color: #7c3aed;
-  cursor: pointer;
-  font-size: 2rem;
-  font-weight: 900;
-  line-height: 1;
-  border: 1px solid #e9d5ff;
-  transition: background 140ms ease;
-}
-
-.stepper-button:not(:disabled):hover {
-  background: #f3e8ff;
-}
-
-.stepper-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.35;
+  display: none;
 }
 
 .output-card {

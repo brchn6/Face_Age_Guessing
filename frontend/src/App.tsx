@@ -215,8 +215,8 @@ const TEXT: Record<Language, TextBundle> = {
     completeEyebrow: "Complete",
     thankYouTitle: "Thank you",
     thankYouCopy: "Your 10 guesses were recorded in this local prototype.",
-    continuePrompt: "Want to do 10 more? It starts right away with a fresh 10-image session.",
-    doTenMore: "Do 10 more",
+    continuePrompt: "Want another round? 10 fresh faces, same quick game.",
+    doTenMore: "Play again",
     dashboardLink: "View recent result dashboard",
     dashboardEyebrow: "Local dashboard",
     dashboardTitle: "Most recent result",
@@ -302,8 +302,8 @@ const TEXT: Record<Language, TextBundle> = {
     completeEyebrow: "הושלם",
     thankYouTitle: "תודה",
     thankYouCopy: "10 הניחושים נשמרו באבטיפוס המקומי הזה.",
-    continuePrompt: "רוצים לעשות עוד 10? זה מתחיל מיד עם סשן חדש של 10 תמונות.",
-    doTenMore: "עוד 10 ניחושים",
+    continuePrompt: "רוצים עוד סיבוב? 10 פרצופים חדשים, אותו משחק מהיר.",
+    doTenMore: "לשחק שוב",
     dashboardLink: "צפייה בדשבורד התוצאה האחרונה",
     dashboardEyebrow: "דשבורד מקומי",
     dashboardTitle: "התוצאה האחרונה",
@@ -1127,26 +1127,6 @@ export default function App() {
                 <span>1</span>
                 <span>100</span>
               </div>
-              <div className="stepper-row">
-                <button
-                  aria-label={text.decreaseGuess}
-                  className="stepper-button"
-                  disabled={guessNumber === null || guessNumber <= 1}
-                  type="button"
-                  onClick={() => guessNumber !== null && updateGuess(guessNumber - 1)}
-                >
-                  −
-                </button>
-                <button
-                  aria-label={text.increaseGuess}
-                  className="stepper-button"
-                  disabled={guessNumber === null || guessNumber >= 100}
-                  type="button"
-                  onClick={() => guessNumber !== null && updateGuess(guessNumber + 1)}
-                >
-                  +
-                </button>
-              </div>
             </div>
 
             <p className="microcopy">{text.guessMicrocopy}</p>
@@ -1217,6 +1197,8 @@ export default function App() {
                 </div>
               </dl>
 
+              <ScatterPlot output={dashboardResult} />
+
               <div className="output-header">
                 <span>{text.latestResponsesLabel}</span>
                 <span>
@@ -1246,8 +1228,6 @@ export default function App() {
               <pre className="json-output" dir="ltr" lang="en">
                 {dashboardJson}
               </pre>
-
-              <ScatterPlot output={dashboardResult} />
             </>
           )}
 
