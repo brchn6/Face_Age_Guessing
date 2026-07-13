@@ -421,6 +421,75 @@ function createDashboardPreview(result: ExperimentOutput) {
   };
 }
 
+function ScatterPlot({ output }: { output: ExperimentOutput }) {
+  // Join responses with face images to get true_age vs predicted_age
+  const faceMap = new Map(output.face_images.map(function (f) { return [f.face_id, f.true_age]; }));
+  const points = output.responses
+    .map(function (r) {
+      const trueAge = faceMap.get(r.face_id);
+      if (trueAge === undefined) return null;
+      return { x: trueAge, y: r.predicted_age };
+    })
+    .filter(function (p): p is { x: number; y: number } { return p !== null; });
+
+  if (points.length === 0) return <p className="dashboard-empty">No data for scatter plot.</p>;
+
+  const padding = 40;
+  const width = 320;
+  const height = 280;
+  const plotW = width - padding * 2;
+  const plotH = height - padding * 2;
+  const maxVal = 100;
+
+  const scaleX = function (v: number) { return padding + (v / maxVal) * plotW; };
+  const scaleY = function (v: number) { return height - padding - (v / maxVal) * plotH; };
+
+  // Identity line
+  const lineD = `M${scaleX(0)},${scaleY(0)} L${scaleX(maxVal)},${scaleY(maxVal)}`;
+
+  // Perfect guess band: +-5 years
+  const bandTop = `M${scaleX(0)},${scaleY(5)} L${scaleX(maxVal - 5)},${scaleY(maxVal)}`;
+  const bandBot = `M${scaleX(5)},${scaleY(0)} L${scaleX(maxVal)},${scaleY(maxVal - 5)}`;
+
+  return (
+    <div className="scatter-plot">
+      <h3 className="analytics-h3">Your Guesses vs Real Age</h3>
+      <svg viewBox={`0 0 ${width} ${height}`} className="scatter-svg" aria-label="Scatter plot of guessed age vs true age">
+        {/* Grid */}
+        {[0, 25, 50, 75, 100].map(function (v) { return (
+          <g key={v}>
+            <line x1={scaleX(v)} y1={padding} x2={scaleX(v)} y2={height - padding} stroke="#f1f5f9" strokeWidth="1" />
+            <line x1={padding} y1={scaleY(v)} x2={width - padding} y2={scaleY(v)} stroke="#f1f5f9" strokeWidth="1" />
+          </g>
+        ); })}
+        {/* Identity line */}
+        <line x1={scaleX(0)} y1={scaleY(0)} x2={scaleX(maxVal)} y2={scaleY(maxVal)} stroke="#cbd5e1" strokeWidth="1.5" strokeDasharray="6,4" />
+        {/* +-5 band */}
+        <polygon
+          points={`${scaleX(0)},${scaleY(5)} ${scaleX(maxVal - 5)},${scaleY(maxVal)} ${scaleX(maxVal)},${scaleY(maxVal - 5)} ${scaleX(5)},${scaleY(0)}`}
+          fill="#f0fdf4"
+          opacity="0.6"
+        />
+        {/* Points */}
+        {points.map(function (p, i) { return (
+          <circle key={i} cx={scaleX(p.x)} cy={scaleY(p.y)} r="5" fill="#7c3aed" opacity="0.7" />
+        ); })}
+        {/* Axis labels */}
+        <text x={width / 2} y={height - 6} textAnchor="middle" fill="#94a3b8" fontSize="11" fontWeight="700">Real Age</text>
+        <text x={10} y={height / 2} textAnchor="middle" fill="#94a3b8" fontSize="11" fontWeight="700" transform={`rotate(-90, 10, ${height / 2})`}>Your Guess</text>
+        {/* Tick labels */}
+        {[0, 25, 50, 75, 100].map(function (v) { return (
+          <text key={`tx${v}`} x={scaleX(v)} y={height - padding + 16} textAnchor="middle" fill="#94a3b8" fontSize="10">{v}</text>
+        ); })}
+        {[0, 25, 50, 75, 100].map(function (v) { return (
+          <text key={`ty${v}`} x={padding - 10} y={scaleY(v) + 4} textAnchor="end" fill="#94a3b8" fontSize="10">{v}</text>
+        ); })}
+      </svg>
+      <p className="microcopy">Dashed line = perfect guess. Green band = within 5 years.</p>
+    </div>
+  );
+}
+
 function AnalyticsDisplay({ data }: { data: Record<string, unknown> }) {
   const op = data.operational as Record<string, unknown> | undefined;
   const res = data.research as Record<string, unknown> | undefined;
@@ -1027,9 +1096,22 @@ export default function App() {
             </div>
 
             <div className="slider-picker" aria-label={text.guessedAge}>
-              <div className="guess-readout" aria-live="polite" dir="ltr">
-                {guessNumber ?? "?"}
-              </div>
+              <input
+                aria-label={text.guessedAge}
+                className={`guess-readout ${guessNumber === null ? "is-empty" : ""}`}
+                dir="ltr"
+                inputMode="numeric"
+                max="100"
+                min="1"
+                pattern="[0-9]*"
+                placeholder="?"
+                type="number"
+                value={guess}
+                onChange={(event) => {
+                  setGuess(event.target.value);
+                  setGuessError("");
+                }}
+              />
               <input
                 aria-label={text.guessedAge}
                 className={`age-slider ${guessNumber === null ? "is-empty" : ""}`}
@@ -1164,6 +1246,8 @@ export default function App() {
               <pre className="json-output" dir="ltr" lang="en">
                 {dashboardJson}
               </pre>
+
+              <ScatterPlot output={dashboardResult} />
             </>
           )}
 
